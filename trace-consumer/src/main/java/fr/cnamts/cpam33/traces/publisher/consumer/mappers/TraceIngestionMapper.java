@@ -1,0 +1,44 @@
+package fr.cnamts.cpam33.traces.publisher.consumer.mappers;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
+import fr.cnamts.cpam33.traces.publisher.consumer.entities.TraceEntity;
+import org.springframework.stereotype.Component;
+
+import java.time.Clock;
+import java.time.Instant;
+
+@Component
+public class TraceIngestionMapper {
+
+    private final ObjectMapper objectMapper;
+    private final Clock clock;
+
+    public TraceIngestionMapper(ObjectMapper objectMapper, Clock clock) {
+        this.objectMapper = objectMapper;
+        this.clock = clock;
+    }
+
+    public TraceEntity toEntity(TraceDto dto) {
+        Instant receivedAt = Instant.now(clock);
+        return new TraceEntity(
+                null,
+                receivedAt,
+                dto.boundedContext(),
+                dto.acteMetierCode(),
+                writeJson(dto.in(), "trace.in"),
+                writeJson(dto.out(), "trace.out")
+        );
+    }
+
+    private String writeJson(Object value, String fieldName) {
+        try {
+            return objectMapper.writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Unable to serialize " + fieldName + " as JSON", e);
+        }
+    }
+
+}
+

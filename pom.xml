@@ -7,7 +7,12 @@
     <groupId>fr.cnamts.cpam33</groupId>
     <artifactId>traces</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>trace-publisher</module>
+        <module>trace-consumer</module>
+        <module>trace-contract</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -160,6 +165,10 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -225,10 +234,6 @@
                         <exclude>**/*IT.java</exclude>
                     </excludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
