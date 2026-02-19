@@ -1,6 +1,6 @@
 package fr.cnamts.cpam33.traces.publisher.services;
 
-import fr.cnamts.cpam33.traces.publisher.dto.TraceDto;
+import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

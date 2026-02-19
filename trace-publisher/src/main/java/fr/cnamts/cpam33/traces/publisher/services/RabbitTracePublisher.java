@@ -1,7 +1,7 @@
 package fr.cnamts.cpam33.traces.publisher.services;
 
+import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
 import fr.cnamts.cpam33.traces.publisher.configurations.TraceRabbitProperties;
-import fr.cnamts.cpam33.traces.publisher.dto.TraceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.MessagePostProcessor;
@@ -23,7 +23,7 @@ public class RabbitTracePublisher {
 
     public void publish(TraceDto traceDto) {
         String rk = String.format(
-                traceRabbitProperties.routingKeyTemplate(),
+                traceRabbitProperties.routingPattern(),
                 traceDto.acteMetierCode()
         );
         MessagePostProcessor headers = message -> {
@@ -31,9 +31,9 @@ public class RabbitTracePublisher {
             message.getMessageProperties().setHeader("acteMetierCode", traceDto.acteMetierCode());
             message.getMessageProperties().setHeader("utilisateurId", traceDto.utilisateurId());
             message.getMessageProperties().setHeader("timestamp", traceDto.timestamp().toString());
-            logger.trace("message = {}", message);
             return message;
         };
+        logger.trace("Publishing trace message: {}", traceDto);
         rabbitTemplate.convertAndSend(traceRabbitProperties.exchange(), rk, traceDto, headers);
     }
 

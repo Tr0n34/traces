@@ -23,7 +23,7 @@ public class TraceIngestionMapper {
     public TraceEntity toEntity(TraceDto dto) {
         Instant receivedAt = Instant.now(clock);
         return new TraceEntity(
-                null,
+                dto.traceId(),
                 receivedAt,
                 dto.boundedContext(),
                 dto.acteMetierCode(),

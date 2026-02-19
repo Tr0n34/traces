@@ -1,12 +1,15 @@
 package fr.cnamts.cpam33.traces.publisher.consumer.services;
 
 import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
-import fr.cnamts.cpam33.traces.publisher.consumer.configurations.RabbitTopologyConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TraceMessageListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(TraceMessageListener.class);
 
     private final TraceIngestService traceIngestService;
 
@@ -14,8 +17,9 @@ public class TraceMessageListener {
         this.traceIngestService = traceIngestService;
     }
 
-    @RabbitListener(queues = RabbitTopologyConfiguration.QUEUE, containerFactory = "rabbitListenerContainerFactory")
+    @RabbitListener(queues = "#{'${trace.rabbit.queues}'.split(',')}", containerFactory = "rabbitListenerContainerFactory")
     public void onMessage(TraceDto message) {
+        logger.trace("Received trace message: {}", message);
         traceIngestService.ingest(message);
     }
 

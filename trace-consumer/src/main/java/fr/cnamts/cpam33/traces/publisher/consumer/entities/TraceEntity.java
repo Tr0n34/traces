@@ -12,8 +12,11 @@ public class TraceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, length = 80)
+    private Long id;
+
     @Column(name = "trace_id", nullable = false, length = 80)
-    private Long traceId;
+    private String traceId;
 
     @Column(name = "received_at", nullable = false)
     private Instant receivedAt;
@@ -34,7 +37,7 @@ public class TraceEntity {
 
     protected TraceEntity() {}
 
-    public TraceEntity(Long traceId, Instant receivedAt, String boundedContext,
+    public TraceEntity(String traceId, Instant receivedAt, String boundedContext,
                        String acteMetier, String traceIn, String traceOut) {
         this.traceId = traceId;
         this.receivedAt = receivedAt;
@@ -44,11 +47,20 @@ public class TraceEntity {
         this.traceOut = traceOut;
     }
 
-    public Long traceId() {
+    public Long id() {
+        return id;
+    }
+
+    public TraceEntity setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String traceId() {
         return traceId;
     }
 
-    public TraceEntity setTraceId(Long traceId) {
+    public TraceEntity setTraceId(String traceId) {
         this.traceId = traceId;
         return this;
     }

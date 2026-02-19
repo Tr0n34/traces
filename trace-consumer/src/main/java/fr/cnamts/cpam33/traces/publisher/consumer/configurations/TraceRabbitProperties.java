@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.configurations;
+package fr.cnamts.cpam33.traces.publisher.consumer.configurations;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -7,10 +7,10 @@ import java.util.List;
 @ConfigurationProperties(prefix = "trace.rabbit")
 public record TraceRabbitProperties(
         String exchange,
-        List<String> queues,
-        String dlq,
+        String routingKeyTemplate,
         String routingPattern,
-        String routingKeyTemplate
+        List<String> queues,
+        String dlq
 ) {
 
 }

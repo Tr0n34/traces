@@ -4,10 +4,14 @@ import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
 import fr.cnamts.cpam33.traces.publisher.consumer.entities.TraceEntity;
 import fr.cnamts.cpam33.traces.publisher.consumer.mappers.TraceIngestionMapper;
 import fr.cnamts.cpam33.traces.publisher.consumer.repositories.TraceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TraceIngestService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TraceIngestService.class.getName());
 
     private final TraceRepository traceRepository;
     private final TraceIngestionMapper traceIngestionMapper;
@@ -21,6 +25,7 @@ public class TraceIngestService {
 
     public Result ingest(TraceDto traceDto) {
         TraceEntity traceEntity = traceIngestionMapper.toEntity(traceDto);
+        logger.trace("ingesting trace {}", traceEntity);
         traceRepository.save(traceEntity);
         return new Result(false);
     }
