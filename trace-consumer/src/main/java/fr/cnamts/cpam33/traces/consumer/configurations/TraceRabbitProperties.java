@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.configurations;
+package fr.cnamts.cpam33.traces.consumer.configurations;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -10,18 +10,10 @@ import java.util.List;
 public class TraceRabbitProperties {
 
     private String exchange;
-    private List<String> queues;
-    private String dlq;
     private String routingKeyTemplate;
     private String routingPattern;
-
-    public TraceRabbitProperties(String exchange, List<String> queues, String dlq, String routingKeyTemplate, String routingPattern) {
-        this.exchange = exchange;
-        this.queues = queues;
-        this.dlq = dlq;
-        this.routingKeyTemplate = routingKeyTemplate;
-        this.routingPattern = routingPattern;
-    }
+    private List<String> queues;
+    private String dlq;
 
     public String exchange() {
         return exchange;

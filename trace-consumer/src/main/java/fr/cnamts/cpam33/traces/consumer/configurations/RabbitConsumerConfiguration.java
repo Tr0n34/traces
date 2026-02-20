@@ -1,15 +1,19 @@
-package fr.cnamts.cpam33.traces.publisher.consumer.configurations;
+package fr.cnamts.cpam33.traces.consumer.configurations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties(TraceRabbitProperties.class)
@@ -21,26 +25,43 @@ public class RabbitConsumerConfiguration {
     }
 
     @Bean
+    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
+
+    @Bean
+    @RefreshScope
     TopicExchange tracesExchange(TraceRabbitProperties traceRabbitProperties) {
         return new TopicExchange(traceRabbitProperties.exchange(), true, false);
     }
 
-    @Bean("tracesQueue")
-    Queue tracesQueue(TraceRabbitProperties traceRabbitProperties) {
-        return QueueBuilder.durable(traceRabbitProperties.queues().getFirst())
-                .deadLetterExchange("")
-                .deadLetterRoutingKey(traceRabbitProperties.dlq())
-                .build();
-    }
-
     @Bean("tracesDlq")
+    @RefreshScope
     Queue tracesDlq(TraceRabbitProperties traceRabbitProperties) {
         return QueueBuilder.durable(traceRabbitProperties.dlq()).build();
     }
 
     @Bean
-    Binding tracesBinding(TraceRabbitProperties traceRabbitProperties, TopicExchange tracesExchange, Queue tracesQueue) {
-        return BindingBuilder.bind(tracesQueue).to(tracesExchange).with(traceRabbitProperties.routingPattern());
+    @RefreshScope
+    public List<Queue> traceQueues(TraceRabbitProperties traceRabbitProperties) {
+        return traceRabbitProperties.queues().stream()
+                .map(name -> QueueBuilder.durable(name)
+                        .deadLetterExchange("")
+                        .deadLetterRoutingKey(traceRabbitProperties.dlq())
+                        .build())
+                .toList();
+    }
+
+    @Bean
+    @RefreshScope
+    public List<Binding> traceBindings(TraceRabbitProperties traceRabbitProperties,
+                                       TopicExchange tracesExchange,
+                                       List<Queue> traceQueues) {
+        return traceQueues.stream()
+                .map(q -> BindingBuilder.bind(q)
+                        .to(tracesExchange)
+                        .with(traceRabbitProperties.routingPattern()))
+                .toList();
     }
 
     @Bean

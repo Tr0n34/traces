@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.consumer.entities;
+package fr.cnamts.cpam33.traces.consumer.entities;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;

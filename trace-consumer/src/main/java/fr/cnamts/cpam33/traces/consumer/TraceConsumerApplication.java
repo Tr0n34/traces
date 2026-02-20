@@ -1,5 +1,7 @@
-package fr.cnamts.cpam33.traces.publisher;
+package fr.cnamts.cpam33.traces.consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
@@ -13,16 +15,18 @@ import org.springframework.context.annotation.Bean;
 import java.util.List;
 
 @SpringBootApplication
-public class TracePublisherApplication {
+public class TraceConsumerApplication {
+
+    private static final Logger logger = LoggerFactory.getLogger(TraceConsumerApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(TracePublisherApplication.class, args);
+        SpringApplication.run(TraceConsumerApplication.class, args);
     }
 
     @Bean
     public ApplicationRunner declareTopologyAtStartup(
             AmqpAdmin admin,
-            @Qualifier("tracesExchange") TopicExchange tracesExchange,
+            TopicExchange tracesExchange,
             @Qualifier("tracesDlq") Queue tracesDlq,
             List<Queue> traceQueues,
             List<Binding> traceBindings
@@ -32,6 +36,8 @@ public class TracePublisherApplication {
             admin.declareQueue(tracesDlq);
             traceQueues.forEach(admin::declareQueue);
             traceBindings.forEach(admin::declareBinding);
+            var names = traceQueues.stream().map(Queue::getName).toList();
+            logger.info("declareTopologyAtStartup: queues={}", names);
         };
     }
 

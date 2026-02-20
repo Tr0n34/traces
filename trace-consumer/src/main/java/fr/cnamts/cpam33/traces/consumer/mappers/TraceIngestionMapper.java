@@ -1,9 +1,9 @@
-package fr.cnamts.cpam33.traces.publisher.consumer.mappers;
+package fr.cnamts.cpam33.traces.consumer.mappers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
-import fr.cnamts.cpam33.traces.publisher.consumer.entities.TraceEntity;
+import fr.cnamts.cpam33.traces.consumer.entities.TraceEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;

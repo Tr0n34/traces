@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.consumer.configurations;
+package fr.cnamts.cpam33.traces.consumer.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

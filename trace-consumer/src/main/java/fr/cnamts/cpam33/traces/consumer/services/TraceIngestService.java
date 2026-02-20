@@ -1,9 +1,9 @@
-package fr.cnamts.cpam33.traces.publisher.consumer.services;
+package fr.cnamts.cpam33.traces.consumer.services;
 
 import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
-import fr.cnamts.cpam33.traces.publisher.consumer.entities.TraceEntity;
-import fr.cnamts.cpam33.traces.publisher.consumer.mappers.TraceIngestionMapper;
-import fr.cnamts.cpam33.traces.publisher.consumer.repositories.TraceRepository;
+import fr.cnamts.cpam33.traces.consumer.entities.TraceEntity;
+import fr.cnamts.cpam33.traces.consumer.mappers.TraceIngestionMapper;
+import fr.cnamts.cpam33.traces.consumer.repositories.TraceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

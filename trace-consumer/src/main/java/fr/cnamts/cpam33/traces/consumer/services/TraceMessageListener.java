@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.consumer.services;
+package fr.cnamts.cpam33.traces.consumer.services;
 
 import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
 import org.slf4j.Logger;
@@ -17,7 +17,11 @@ public class TraceMessageListener {
         this.traceIngestService = traceIngestService;
     }
 
-    @RabbitListener(queues = "#{'${trace.rabbit.queues}'.split(',')}", containerFactory = "rabbitListenerContainerFactory")
+    @RabbitListener(
+            id = "trace-consumer",
+            queues = "#{'${trace.rabbit.queues}'.split(',')}",
+            containerFactory = "rabbitListenerContainerFactory"
+    )
     public void onMessage(TraceDto message) {
         logger.trace("Received trace message: {}", message);
         traceIngestService.ingest(message);
