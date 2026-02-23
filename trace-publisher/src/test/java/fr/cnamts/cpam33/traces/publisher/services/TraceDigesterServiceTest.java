@@ -13,11 +13,9 @@ class TraceDigesterServiceTest {
         RabbitTracePublisher publisher = mock(RabbitTracePublisher.class);
         TraceDigesterService service = new TraceDigesterService(publisher);
         TraceDto dto = mock(TraceDto.class);
-        TraceDigesterService.Result result = service.ingest(dto);
+        service.ingest(dto);
         verify(publisher).publish(dto);
         verifyNoMoreInteractions(publisher);
-        assertNotNull(result);
-        assertFalse(result.isAlreadyDigested());
     }
 
 }

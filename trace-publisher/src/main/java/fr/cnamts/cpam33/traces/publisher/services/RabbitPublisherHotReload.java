@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.configurations;
+package fr.cnamts.cpam33.traces.publisher.services;
 
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;

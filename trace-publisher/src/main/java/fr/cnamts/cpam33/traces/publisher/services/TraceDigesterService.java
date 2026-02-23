@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class TraceDigesterService {
 
-    public record Result(boolean isAlreadyDigested) {}
-
     private final RabbitTracePublisher rabbitTracePublisher;
 
     public TraceDigesterService(RabbitTracePublisher rabbitTracePublisher) {
@@ -16,9 +14,8 @@ public class TraceDigesterService {
     }
 
     @Transactional
-    public Result ingest(TraceDto dto) {
+    public void ingest(TraceDto dto) {
         rabbitTracePublisher.publish(dto);
-        return new Result(false);
     }
 
 }
