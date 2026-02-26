@@ -30,12 +30,9 @@ public class TraceController {
     public ResponseEntity<Void> ingest(@RequestBody @Valid TraceDto dto) {
         ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
         logger.trace("Received trace message: {}", dto.acteMetierCode());
-        var res = traceDigesterService.ingest(dto);
-        if ( !res.isAlreadyDigested()) {
-            responseEntity = ResponseEntity.accepted()
-                    .location(URI.create("/api/v1/traces/"))
-                    .build();
-        }
-        return responseEntity;
+        traceDigesterService.ingest(dto, true);
+        return responseEntity = ResponseEntity.accepted()
+                .location(URI.create("/api/v1/traces/"))
+                .build();
     }
 }
