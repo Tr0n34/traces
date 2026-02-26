@@ -1,7 +1,7 @@
 package fr.cnamts.cpam33.traces.publisher.services;
 
 import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
-import fr.cnamts.cpam33.traces.publisher.configurations.TraceRabbitProperties;
+import fr.cnamts.cpam33.traces.publisher.configurations.properties.TraceRabbitProperties;
 import fr.cnamts.cpam33.traces.publisher.configurations.RabbitMessageHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class RabbitTracePublisher {
             message.getMessageProperties().setHeader(RabbitMessageHeader.SCHEMA_VERSION.getName(), traceDto.schemaVersion());
             message.getMessageProperties().setHeader(RabbitMessageHeader.ACTE_METIER_CODE.getName(), traceDto.acteMetierCode());
             message.getMessageProperties().setHeader(RabbitMessageHeader.UTILISATEUR_ID.getName(), traceDto.utilisateurId());
-            message.getMessageProperties().setHeader(RabbitMessageHeader.TIMESTAMP.getName(), traceDto.timestamp().toString());
+            message.getMessageProperties().setHeader(RabbitMessageHeader.TIMESTAMP.getName(), traceDto.createdOn().toString());
             return message;
         };
         logger.trace("Publishing trace message: {}", traceDto);

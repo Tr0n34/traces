@@ -1,6 +1,7 @@
 package fr.cnamts.cpam33.traces.publisher.configurations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.cnamts.cpam33.traces.publisher.configurations.properties.TraceRabbitProperties;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;

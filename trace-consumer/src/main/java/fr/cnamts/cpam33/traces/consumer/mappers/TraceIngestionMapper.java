@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Component
 public class TraceIngestionMapper {
@@ -22,14 +24,27 @@ public class TraceIngestionMapper {
 
     public TraceEntity toEntity(TraceDto dto) {
         Instant receivedAt = Instant.now(clock);
-        return new TraceEntity(
-                dto.traceId(),
-                receivedAt,
-                dto.boundedContext(),
-                dto.acteMetierCode(),
-                writeJson(dto.in(), "trace.in"),
-                writeJson(dto.out(), "trace.out")
-        );
+
+        return new TraceEntity()
+                .setTraceId(dto.traceId())
+                .setApplicationId(dto.applicationId())
+                .setUtilisateurId(dto.utilisateurId())
+                .setUtilisateurIp(dto.utilisateurIp())
+                .setCorrelationId(dto.correlationId())
+                .setFrontPage(dto.frontPage())
+                .setBoundedContext(dto.boundedContext())
+                .setFonction(dto.fonction())
+                .setActeMetier(dto.acteMetierCode())
+                .setReceivedAt(receivedAt)
+                .setCreatedOn(dto.createdOn())
+                .setTraceIn(writeJson(dto.in(), "trace.in"))
+                .setTraceOut(writeJson(dto.out(), "trace.out"));
+    }
+
+    private Instant toInstant(LocalDateTime timestamp, ZoneId zoneId) {
+        return timestamp != null
+                ? timestamp.atZone(zoneId).toInstant()
+                : null;
     }
 
     private String writeJson(Object value, String fieldName) {

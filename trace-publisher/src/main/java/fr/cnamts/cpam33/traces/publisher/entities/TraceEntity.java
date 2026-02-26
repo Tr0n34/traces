@@ -1,7 +1,7 @@
 package fr.cnamts.cpam33.traces.publisher.entities;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fr.cnamts.cpam33.traces.publisher.configurations.TraceStatus;
+import fr.cnamts.cpam33.traces.publisher.configurations.enums.TraceStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

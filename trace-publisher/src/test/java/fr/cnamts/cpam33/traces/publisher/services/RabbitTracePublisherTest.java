@@ -1,7 +1,8 @@
 package fr.cnamts.cpam33.traces.publisher.services;
 
 import fr.cnamts.cpam33.traces.contract.dto.TraceDto;
-import fr.cnamts.cpam33.traces.publisher.configurations.TraceRabbitProperties;
+import fr.cnamts.cpam33.traces.publisher.configurations.RabbitMessageHeader;
+import fr.cnamts.cpam33.traces.publisher.configurations.properties.TraceRabbitProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
@@ -28,7 +29,7 @@ class RabbitTracePublisherTest {
         when(dto.schemaVersion()).thenReturn("1");
         when(dto.utilisateurId()).thenReturn("123456");
         OffsetDateTime ts = OffsetDateTime.parse("2026-02-19T20:10:00+01:00");
-        when(dto.timestamp()).thenReturn(ts.toLocalDateTime());
+        when(dto.createdOn()).thenReturn(ts.toInstant());
         var mppCaptor = org.mockito.ArgumentCaptor.forClass(MessagePostProcessor.class);
         publisher.publish(dto);
         verify(rabbitTemplate).convertAndSend(
@@ -41,11 +42,9 @@ class RabbitTracePublisherTest {
         MessageProperties mp = new MessageProperties();
         Message msg = new Message(new byte[0], mp);
         Message processed = mppCaptor.getValue().postProcessMessage(msg);
-        assertEquals("1", processed.getMessageProperties().getHeaders().get("schemaVersion"));
-        assertEquals("PATIENT_CREER", processed.getMessageProperties().getHeaders().get("acteMetierCode"));
-        assertEquals("123456", processed.getMessageProperties().getHeaders().get("utilisateurId"));
-        String expectedTimestampHeader = dto.timestamp().toString();
-        assertEquals(expectedTimestampHeader, processed.getMessageProperties().getHeaders().get("timestamp"));
+        assertEquals("1", processed.getMessageProperties().getHeaders().get(RabbitMessageHeader.SCHEMA_VERSION.getName()));
+        assertEquals("PATIENT_CREER", processed.getMessageProperties().getHeaders().get(RabbitMessageHeader.ACTE_METIER_CODE.getName()));
+        assertEquals("123456", processed.getMessageProperties().getHeaders().get(RabbitMessageHeader.UTILISATEUR_ID.getName()));
     }
 
 }

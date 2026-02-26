@@ -1,5 +1,9 @@
 package fr.cnamts.cpam33.traces.publisher.configurations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.cnamts.cpam33.traces.contract.policies.TracePolicyOptions;
+import fr.cnamts.cpam33.traces.publisher.configurations.properties.TracePolicyProperties;
+import fr.cnamts.cpam33.traces.publisher.configurations.properties.TraceRabbitProperties;
 import fr.cnamts.cpam33.traces.publisher.services.RabbitTracePublisher;
 import fr.cnamts.cpam33.traces.publisher.services.TraceDigesterService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -11,17 +15,40 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.SimpleTransactionStatus;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
 @Configuration
 @EnableTransactionManagement
-public class TraceDigesterConfiguration {
+public class TraceDigesterTestConfiguration {
+
+    @Bean("traceObjectMapper")
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
         return mock(RabbitTemplate.class);
+    }
+
+    @Bean
+    public TracePolicyOptions tracePolicyOptions(TracePolicyProperties props) {
+        return new TracePolicyOptions(List.of("1"), Duration.ofSeconds(10));
+    }
+
+    @Bean
+    public TracePolicyProperties tracePolicyProperties() {
+        return mock(TracePolicyProperties.class);
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.system(ZoneId.of("Europe/Paris"));
     }
 
     @Bean
@@ -42,8 +69,11 @@ public class TraceDigesterConfiguration {
     }
 
     @Bean
-    public TraceDigesterService traceDigesterService(RabbitTracePublisher publisher) {
-        return new TraceDigesterService(publisher);
+    public TraceDigesterService traceDigesterService(
+            RabbitTracePublisher publisher,
+             TracePolicyOptions tracePolicyOptions,
+             Clock clock) {
+        return new TraceDigesterService(publisher, tracePolicyOptions, clock);
     }
 
     @Bean

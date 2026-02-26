@@ -1,8 +1,9 @@
 package fr.cnamts.cpam33.traces.publisher.repositories;
 
 import fr.cnamts.cpam33.traces.publisher.entities.TraceEntity;
-import fr.cnamts.cpam33.traces.publisher.configurations.TraceStatus;
+import fr.cnamts.cpam33.traces.publisher.configurations.enums.TraceStatus;
 import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,7 @@ public interface TraceJpaRepository extends JpaRepository<TraceEntity, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
         select t
-        from TraceOutboxEntity t
+        from TraceEntity t
         where t.status = :status
           and (t.nextRetryAt is null or t.nextRetryAt <= :now)
         order by t.createdAt asc
@@ -28,7 +29,7 @@ public interface TraceJpaRepository extends JpaRepository<TraceEntity, Long> {
     );
 
     default List<TraceEntity> findRetryable(OffsetDateTime now, int limit) {
-        return findRetryableLocked(TraceStatus.RETRYING, now, org.springframework.data.domain.PageRequest.of(0, limit));
+        return findRetryableLocked(TraceStatus.RETRYING, now, PageRequest.of(0, limit));
     }
 
 }

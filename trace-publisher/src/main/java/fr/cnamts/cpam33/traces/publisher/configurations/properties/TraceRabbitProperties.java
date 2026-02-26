@@ -1,4 +1,4 @@
-package fr.cnamts.cpam33.traces.publisher.configurations;
+package fr.cnamts.cpam33.traces.publisher.configurations.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
