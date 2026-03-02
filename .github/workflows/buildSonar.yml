@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build, Test & SonarCloud
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -43,6 +43,35 @@ jobs:
 
       - name: Debug JaCoCo reports
         run: find . -name jacoco.xml
+
+      # On passe les outputs au job sonar
+      - name: Upload build outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            **/target/classes
+            **/target/site/jacoco/jacoco.xml
+            **/target/site/jacoco-aggregate/jacoco.xml
+          if-no-files-found: warn
+
+  sonar:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      # checkout utile pour que le scanner ait les sources + blame git
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download build outputs
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
 
       # 5. SonarCloud analysis
       - name: SonarCloud Scan
