@@ -12,6 +12,7 @@
         <module>trace-publisher</module>
         <module>trace-consumer</module>
         <module>trace-contract</module>
+        <module>trace-api</module>
     </modules>
 
     <parent>
