@@ -5,4 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 public record UpdateDlqMessageRequest(
         @NotBlank String payloadBase64,
         @NotBlank String headersJson
-) {}
+) {
+
+}

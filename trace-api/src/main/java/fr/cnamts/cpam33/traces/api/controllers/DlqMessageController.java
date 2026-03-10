@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/dlq/messages")
+@RequestMapping(Routes.Admin.ADMIN_RESOURCE)
 public class DlqMessageController {
 
     private final IDlqMessageService dlqMessageService;
@@ -28,12 +28,12 @@ public class DlqMessageController {
         return dlqMessageService.list(status, pageable);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(Routes.URL_ID)
     public DlqMessageDetailDto get(@PathVariable Long id) {
         return dlqMessageService.get(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(Routes.URL_ID)
     public DlqMessageDetailDto update(
             @PathVariable Long id,
             @RequestBody @Valid UpdateDlqMessageRequest updateDlqMessageRequest
@@ -45,12 +45,12 @@ public class DlqMessageController {
         );
     }
 
-    @PostMapping("/{id}/republish")
+    @PostMapping(Routes.URL_ID + Routes.DlqMessage.REPUBLISH)
     public void republish(@PathVariable Long id) {
         dlqMessageService.republish(id);
     }
 
-    @PostMapping("/{id}/discard")
+    @PostMapping(Routes.URL_ID + Routes.DlqMessage.DISCARD)
     public void discard(@PathVariable Long id) {
         dlqMessageService.discard(id);
     }
